@@ -1,5 +1,6 @@
 import 'package:fam/Widget/app_column.dart';
 import 'package:fam/Widget/app_icon.dart';
+import 'package:fam/Widget/exandable.dart';
 import 'package:fam/util/dimensions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +19,7 @@ class PopularFoodDetail extends StatelessWidget {
       backgroundColor: Colors.white,
       body: Stack(
         children: [
+          //background image
           Positioned(
               left: 0,
               right: 0,
@@ -33,6 +35,7 @@ class PopularFoodDetail extends StatelessWidget {
                   )
                 ),
               )),
+          //icon widgets
           Positioned(
             top: Dimensions.height45,
             left: Dimensions.width20,
@@ -44,6 +47,7 @@ class PopularFoodDetail extends StatelessWidget {
                   AppIcon(icon: Icons.shopping_cart_outlined)
                 ],
               )),
+          //introdution of food
           Positioned(
             left: 0,
               right: 0,
@@ -64,11 +68,15 @@ class PopularFoodDetail extends StatelessWidget {
                   children: [
                     AppColumn(text: "Vietnamese Side"),
                     SizedBox(height: Dimensions.height20,),
-                    BigText(text: "Introduce")
+                    BigText(text: "Introduce"),
+                    SizedBox(height: Dimensions.height20,),
+                    Expanded(child: ExpandableTextWidget(text: "chicken master chng tới Việt Nam thăm cấp nhà nước theo lời mời của Tổng Bí thư Nguyễn Phú Trọng.Tổng thống Mỹ Joe Biden rời New Delhi sau hội nghị G20, lên đường tới Việt Nam thăm cấp nhà nước theo lời mời của Tổng Bí thư Nguyễn Phú Trọng.Tổng thống Mỹ Joe Biden rời New Delhi sau hội nghị G20, lên đường tới Việt Nam thăm cấp nhà nước theo lời mời của Tổng Bí thư Nguyễn Phú Trọng.Tổng thống Mỹ Joe Biden rời New Delhi sau hội nghị G20, lên đường tới Việt Nam thăm cấp nhà nước theo lời mời của Tổng Bí thư Nguyễn Phú Trọng.Tổng thống Mỹ Joe Biden rời New Delhi sau hội nghị G20, lên đường tới Việ thư Nguyễn Phú Trọng. ",))
                   ],
                 ),
 
-              ))
+              )),
+          //expandable text widget
+
         ],
       ),
       bottomNavigationBar: Container(
