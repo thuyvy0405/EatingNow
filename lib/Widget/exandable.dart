@@ -20,7 +20,7 @@ class _ExpandableTextWidgetState extends State<ExpandableTextWidget> {
   late String secondHalf;
 
   bool hiddenText = true;
-  String text  = "Show more";
+  String text  = "Hiển thị thêm";
   double textHeight = Dimensions.screenHeight/5.63;
 
   @override
@@ -40,14 +40,16 @@ class _ExpandableTextWidgetState extends State<ExpandableTextWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: secondHalf.isEmpty?SmallText(color: AppColors.paraColor,size: Dimensions.font16,text: firstHalf):Column(
+      child: secondHalf.isEmpty?
+      SmallText(color: AppColors.paraColor,size: Dimensions.font16,text: firstHalf) :
+      Column(
         children: [
           SmallText(heigh: 1.8,color: AppColors.paraColor,size: Dimensions.font16,text: hiddenText?(firstHalf+"..."):(firstHalf+secondHalf)),
           InkWell(
             onTap: (){
               setState(() {
-                hiddenText=!hiddenText;
-                (text == "Show more") ? text = "Hide less" :text = "Show more";
+                hiddenText = !hiddenText;
+                (text == "Hiển thị thêm") ? text = "Ẩn bớt" :text = "Hiển thị thêm";
               });
             },
             child: Row(

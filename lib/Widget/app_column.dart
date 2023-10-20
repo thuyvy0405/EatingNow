@@ -1,3 +1,4 @@
+import 'package:fam/models/storenearUser.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -5,49 +6,53 @@ import '../util/Colors.dart';
 import '../util/dimensions.dart';
 import 'Big_text.dart';
 import 'Icon_and_Text_widget.dart';
+import 'RatingStars.dart';
 import 'Small_text.dart';
 
 class AppColumn extends StatelessWidget {
+  final double rating; // Tỉ lệ đánh giá
+  final double distance; // Tỉ lệ đánh giá
+  final double time; // Tỉ lệ đánh giá
   final String text;
-  const AppColumn({Key?key, required this.text}): super(key: key);
-
+  const AppColumn({Key?key, required this.text, required this.rating,required this.distance, required this.time}): super(key: key);
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        BigText(text: text, size:  Dimensions.font26,),
-        SizedBox(height: Dimensions.height10,),
+        Container(
+          height: 52,
+          child:
+            BigText(text: text, size:  Dimensions.font20,),
+            ),
+        SizedBox(height: Dimensions.height5,),
         //comment section
         Row(
           children: [
-            Wrap(
-              children: List.generate(5, (index) { return Icon(Icons.star, color: AppColors.mainColor,size: 15,);}),
-            ),
-            SizedBox(width: 10,),
-            SmallText(text: "4.5"),
-            SizedBox(width: 10,),
+              RatingStars(
+                rating: rating,
+                starSize: 15,
+                starColor: AppColors.yellowColor,
+                emptyStarColor: Colors.grey,
+              ),
+            SizedBox(width: 10),
+            SmallText(text: rating.toString()),
+            SizedBox(width: 10),
             SmallText(text: "1287"),
-            SizedBox(width: 10,),
-            SmallText(text: "comment")
+            SizedBox(width: 10),
+            SmallText(text: "comment"),
           ],
         ),
-        SizedBox(height: Dimensions.height20,),
+        SizedBox(height: Dimensions.height5,),
         //time and distance
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            IconAndTextWidget(icon: Icons.circle_sharp,
-                text: "Normal",
-
-                iconColor: AppColors.iconColor1),
             IconAndTextWidget(icon: Icons.location_on,
-                text: "1.7km",
-
+                text: distance.toString() +" Km" ,
                 iconColor: AppColors.mainColor),
             IconAndTextWidget(icon: Icons.access_time_rounded,
-                text: "32min",
-
+                text: time.toString()+" phút",
                 iconColor: AppColors.iconColor2)
           ],
         )
