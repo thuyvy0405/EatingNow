@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import '../../storage/locationstorage.dart';
 import '../../util/Colors.dart';
 import '../../util/dimensions.dart';
+import '../Cart/cartPage.dart';
 import 'food_page_body.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -45,61 +46,99 @@ class _MainFoodPageState extends State<MainFoodPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          // Phần Header
-          Container(
-            child: Container(
-                margin: EdgeInsets.only(top: Dimensions.height45, bottom: Dimensions.height5),
-                padding: EdgeInsets.only(left: Dimensions.width20, right: Dimensions.width20),
-                child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      BigText(text: "Giao tới: "+nameAddressdelivery.toUpperCase(), color: AppColors.mainColor),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => LocationPage()), // Thay thế 'LocationPage' bằng tên trang thực tế của bạn
-                          );
-                        },
-                        child: Row(
-                          children: [
-                            Container(
-                              height: 41,
-                              width: Dimensions.screenWidth - 110,
-                              child: BigText(text: addressdelivery, size: Dimensions.font13,),
-                            ),
-                            Icon(Icons.arrow_drop_down_rounded)
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                  Container(
-                      width:Dimensions.height45,
-                      height:Dimensions.height45,
-                      child:Icon(Icons.search, color:Colors.white, size: Dimensions.iconSize24,),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(Dimensions.radius15),
-                        color: AppColors.mainColor,
-                      )
-                  )
-                ],
-              )
-          )
-          ),
+      body: Stack(
+         children: [
 
-          //showing the body
-          Expanded(child: SingleChildScrollView(
-            child:  FoodPageBody(),
-          )),
+           Column(
+             children: [
+               // Phần Header
+               Container(
+                   child: Container(
+                       margin: EdgeInsets.only(top: Dimensions.height45, bottom: Dimensions.height5),
+                       padding: EdgeInsets.only(left: Dimensions.width20, right: Dimensions.width20),
+                       child: Row(
+                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                         children: [
+                           Column(
+                             crossAxisAlignment: CrossAxisAlignment.start,
+                             children: [
+                               BigText(text: "Giao tới: "+nameAddressdelivery.toUpperCase(), color: AppColors.mainColor),
+                               GestureDetector(
+                                 onTap: () {
+                                   Navigator.push(
+                                     context,
+                                     MaterialPageRoute(builder: (context) => LocationPage(link: "",)), // Thay thế 'LocationPage' bằng tên trang thực tế của bạn
+                                   );
+                                 },
+                                 child: Row(
+                                   children: [
+                                     Container(
+                                       height: Dimensions.height45,
+                                       width: Dimensions.screenWidth - 110,
+                                       child: BigText(text: addressdelivery, size: Dimensions.font13,),
+                                     ),
+                                     Icon(Icons.arrow_drop_down_rounded)
+                                   ],
+                                 ),
+                               )
+                             ],
+                           ),
+                           Container(
+                               width:Dimensions.height40,
+                               height:Dimensions.height40,
+                               child:Icon(Icons.search, color:Colors.white, size: Dimensions.iconSize16,),
+                               decoration: BoxDecoration(
+                                 borderRadius: BorderRadius.circular(Dimensions.radius15),
+                                 color: AppColors.mainColor,
+                               )
+                           )
+                         ],
+                       )
+                   )
+               ),
 
-        ],
+               //showing the body
+               Expanded(child: SingleChildScrollView(
+                 child:  FoodPageBody(),
+               )),
+
+             ],
+           ),
+           Positioned(
+             bottom: 50,
+             right: 20,
+             child: GestureDetector(
+               onTap: () {
+                 Navigator.push(
+                   context,
+                   MaterialPageRoute(builder: (context) => CartPage()),
+                 );
+               },
+               child: Container(
+                 padding: EdgeInsets.all(10),
+                 decoration: BoxDecoration(
+                   shape: BoxShape.circle,
+                   color: AppColors.mainColor,
+                   boxShadow: [
+                     BoxShadow(
+                       color: Colors.grey.withOpacity(0.5),
+                       spreadRadius: 2,
+                       blurRadius: 3,
+                       offset: Offset(0, 2),
+                     ),
+                   ],
+                 ),
+                 child: Icon(
+                   Icons.shopping_bag,
+                   size: 30,
+                   color: Colors.white,
+                 ),
+               ),
+             ),
+           )
+         ],
       )
+
 
     );
   }

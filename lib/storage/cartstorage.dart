@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../models/product_recommended_model.dart';
+
 class CartStorage {
   static const String _key = 'cart_items';
 
@@ -28,9 +30,11 @@ class CartStorage {
     // Kiểm tra xem sản phẩm đã tồn tại trong giỏ hàng hay chưa
     bool found = false;
     for (int i = 0; i < cartItems.length; i++) {
-      if (cartItems[i].id == newItem.id) {
+      if (cartItems[i].foodListId == newItem.foodListId) {
+        //set lại sô lượng là 0
+        cartItems[i].qty = 0;
         // Món ăn đã tồn tại, tăng số lượng
-        cartItems[i].quantity += newItem.quantity;
+        cartItems[i].qty += newItem.qty;
         found = true;
         break;
       }
@@ -58,9 +62,9 @@ class CartStorage {
     // Kiểm tra xem sản phẩm đã tồn tại trong giỏ hàng hay chưa
     bool found = false;
     for (int i = 0; i < cartItems.length; i++) {
-      if (cartItems[i].id == newItem.id) {
+      if (cartItems[i].foodListId == newItem.foodListId) {
         // Món ăn đã tồn tại, tăng số lượng
-        cartItems[i].quantity +=1;
+        cartItems[i].qty +=1;
         found = true;
         break;
       }
@@ -78,15 +82,15 @@ class CartStorage {
       final List<dynamic> decodedData = json.decode(cartData);
       cartItems = decodedData.map((data) => CartItem.fromJson(data)).toList();
     }
-    if(newItem.quantity == 1){
-      cartItems.removeWhere((item) => item.id == newItem.id); // Xóa món ăn dựa trên ID
+    if(newItem.qty == 1){
+      cartItems.removeWhere((item) => item.foodListId == newItem.foodListId); // Xóa món ăn dựa trên ID
     }
     else{
       // Kiểm tra xem sản phẩm đã tồn tại trong giỏ hàng hay chưa
       for (int i = 0; i < cartItems.length; i++) {
-        if (cartItems[i].id == newItem.id) {
+        if (cartItems[i].foodListId == newItem.foodListId) {
           // Món ăn đã tồn tại, tăng số lượng
-          cartItems[i].quantity-=1;
+          cartItems[i].qty-=1;
           break;
         }
       }
@@ -107,7 +111,7 @@ class CartStorage {
       cartItems = decodedData.map((data) => CartItem.fromJson(data)).toList();
     }
 
-    cartItems.removeWhere((item) => item.id == newItem.id); // Xóa món ăn dựa trên ID
+    cartItems.removeWhere((item) => item.foodListId == newItem.foodListId); // Xóa món ăn dựa trên ID
 
     // Lưu lại danh sách giỏ hàng cập nhật
     final updatedCartData = json.encode(cartItems);
@@ -121,37 +125,57 @@ class CartStorage {
 }
 
 class CartItem {
-  final int id;
-  final String name;
+  final int foodListId;
+  final String foodName;
   final double price;
-  int quantity;
-  final String image;
+  int qty;
+  final String uploadImage;
+  String description;
 
   CartItem({
-    required this.id,
-    required this.name,
+    required this.foodListId,
+    required this.foodName,
     required this.price,
-    required this.quantity,
-    required this.image,
+    required this.qty,
+    required this.uploadImage,
+    required this.description,
   });
+  // Hàm để ánh xạ dữ liệu từ CartItem sang DataProduct
+  DataProduct toDataProduct() {
+    return DataProduct(
+      foodListId: foodListId,
+      foodName: foodName,
+      price: price.toInt(), // Đảm bảo định dạng giá phù hợp
+      qty: qty,
+      uploadImage: uploadImage,
+      // Các trường khác có thể là null hoặc giá trị mặc định
+      category: null,
+      categoryId: null,
+      description: description,
+      userId: null,
+      status: null,
+    );
+  }
 
   // Chuyển đổi dữ liệu CartItem thành một Map
   Map<String, dynamic> toJson() => {
-    'id': id,
-    'name': name,
+    'foodListId': foodListId,
+    'foodName': foodName,
     'price': price,
-    'quantity': quantity,
-    'image': image
+    'qty': qty,
+    'uploadImage': uploadImage,
+    'description': description
   };
 
   // Tạo một đối tượng CartItem từ Map
   factory CartItem.fromJson(Map<String, dynamic> json) {
     return CartItem(
-      id: json['id'],
-      name: json['name'],
+      foodListId: json['foodListId'],
+      foodName: json['foodName'],
       price: json['price'],
-      quantity: json['quantity'],
-      image: json['image'],
+      qty: json['qty'],
+      uploadImage: json['uploadImage'],
+      description: json['description']
     );
   }
 }

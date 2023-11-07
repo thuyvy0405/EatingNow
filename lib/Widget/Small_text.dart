@@ -10,12 +10,11 @@ class SmallText extends StatelessWidget {
     this.size = 12,
     this.heigh = 1.6
   }) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Text(
-      text,
-      maxLines: text.length,
+      text ,
+      maxLines:  text.length,
       overflow: TextOverflow.ellipsis,
       style: TextStyle(
           fontFamily: 'Roboto',

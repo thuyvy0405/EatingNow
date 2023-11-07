@@ -13,23 +13,17 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../storage/cartstorage.dart';
 class RecommenedFoodDetail extends StatefulWidget {
-  final DataProduct dataProduct;
-  const RecommenedFoodDetail({Key? key, required this.dataProduct}) : super(key: key);
+  const RecommenedFoodDetail({Key? key}) : super(key: key);
 
   @override
   _RecommenedFoodDetailState createState() => _RecommenedFoodDetailState();
 }
 
 class _RecommenedFoodDetailState extends State<RecommenedFoodDetail> {
-  int count = 0;
+  int countAvailable = 0;
+  int count = 0 ;
   double sum =0;
 
-
-  void incrementCount() {
-    setState(() {
-      count++; // Increment the count value by 1
-    });
-  }
 // Phương thức để thêm một món ăn vào giỏ hàng
   Future<void> _addToCart(CartItem item) async {
     // Lưu lại danh sách giỏ hàng sau khi thêm
@@ -45,12 +39,16 @@ class _RecommenedFoodDetailState extends State<RecommenedFoodDetail> {
         count= 0;
         sum = 0;
       });
-      Navigator.of(context).pop(); // Quay trở lại màn hình trước đó
+      Navigator.of(context).pop(true); // true indicates that something has changed
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final arguments = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    final dataProduct = arguments['data']; // Access 'your_data' here
+    countAvailable = dataProduct?.qty?? 0;
+    print(count);
     return Scaffold(
       backgroundColor: Colors.white,
       body:  CustomScrollView(
@@ -92,7 +90,7 @@ class _RecommenedFoodDetailState extends State<RecommenedFoodDetail> {
                 // TÊN MÓN ĂN
                 child: Container(
                   // Tên món ăn
-                  child: Center(child: BigText(size: Dimensions.font26,text: widget.dataProduct!.foodName!),),
+                  child: Center(child: BigText(size: Dimensions.font26,text:dataProduct!.foodName!),),
                   width: double.maxFinite,
                   padding:  EdgeInsets.only(top: 5, bottom:  10),
                   decoration: BoxDecoration(
@@ -110,8 +108,8 @@ class _RecommenedFoodDetailState extends State<RecommenedFoodDetail> {
             //hÌNH ẢNH MÓN ĂN
             flexibleSpace: FlexibleSpaceBar(
               background:
-                widget.dataProduct?.uploadImage!= null?
-              Image.network(widget.dataProduct?.uploadImage??"",
+                dataProduct?.uploadImage!= null?
+              Image.network(dataProduct?.uploadImage??"",
                 width: double.maxFinite,
                 fit: BoxFit.cover,
               ):
@@ -126,7 +124,7 @@ class _RecommenedFoodDetailState extends State<RecommenedFoodDetail> {
             child: Column(
               children: [
                 Container(
-                  child: ExpandableTextWidget(text: widget.dataProduct?.description?? " "),
+                  child: ExpandableTextWidget(text: dataProduct?.description ??" ",),
                   margin: EdgeInsets.only(left: Dimensions.width20, right: Dimensions.width20),
                 )
               ],
@@ -149,10 +147,10 @@ class _RecommenedFoodDetailState extends State<RecommenedFoodDetail> {
               children: [
                 GestureDetector(
                   onTap: () {
-                    if (count > 0) {
+                    if ((count + countAvailable) > 0) {
                       setState(() {
                         count--;
-                        sum = sum - widget.dataProduct!.price!; // Increment the count value by 1
+                        sum = sum - dataProduct!.price!; // Increment the count value by 1
                       });
                     }
                   },
@@ -163,12 +161,12 @@ class _RecommenedFoodDetailState extends State<RecommenedFoodDetail> {
                     icon: Icons.remove,
                   ),
                 ),
-                BigText(text: NumberFormat.currency(locale: 'vi_VN', symbol: '₫').format(widget.dataProduct?.price ?? 0)+" x "+ count.toString(), color: AppColors.mainColor,size: Dimensions.font26,),
+                BigText(text: NumberFormat.currency(locale: 'vi_VN', symbol: '₫').format(dataProduct?.price ?? 0)+" x "+ (count +countAvailable).toString(), color: AppColors.mainColor,size: Dimensions.font16,),
                 GestureDetector(
                   onTap: () {
                     setState(() {
                       count++;
-                      sum = (widget.dataProduct!.price! * count).toDouble(); // Increment the count value by 1
+                      sum = (dataProduct!.price! * (count+countAvailable)).toDouble(); // Increment the count value by 1
                     });
                   },
                   child: AppIcon(
@@ -211,27 +209,29 @@ class _RecommenedFoodDetailState extends State<RecommenedFoodDetail> {
                   child: GestureDetector(
                     onTap: () {
                       // Kiểm tra nếu count lớn hơn 0
-                      if (count > 0 && widget.dataProduct != null) {
-                        double price = widget.dataProduct!.price!.toDouble(); // Chuyển đổi sang double
+                      if ((count + countAvailable) > 0 && dataProduct != null) {
+                        double price = dataProduct!.price!.toDouble(); // Chuyển đổi sang double
                         CartItem newItem = CartItem(
-                          name: widget.dataProduct.foodName ?? "",
+                          foodName: dataProduct.foodName ?? "",
                           price: price,
-                          quantity: count,
-                          id: widget.dataProduct.foodListId ?? 0,
-                          image: widget.dataProduct.uploadImage ?? "",
+                          qty: count + countAvailable,
+                          foodListId: dataProduct.foodListId ?? 0,
+                          uploadImage: dataProduct.uploadImage ?? "",
+                          description: ""
                         );
+
                         _addToCart(newItem);
                       }
                     },
                     child: BigText(
-                      text: NumberFormat.currency(locale: 'vi_VN', symbol: '₫').format(sum ?? 0) + " | Thêm vào giỏ hàng",
+                      text: NumberFormat.currency(locale: 'vi_VN', symbol: '₫').format((dataProduct.price *(count + countAvailable)) ?? 0) + " | Thêm vào giỏ hàng",
                       color: Colors.white,
                       size: Dimensions.font13,
                     ),
                   ),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(Dimensions.radius20),
-                    color: count > 0 ? AppColors.mainColor : Colors.grey, // Đặt màu xám nếu count <= 0
+                    color: (count + countAvailable) > 0 ? AppColors.mainColor : Colors.grey, // Đặt màu xám nếu count <= 0
                   ),
                 )
               ],

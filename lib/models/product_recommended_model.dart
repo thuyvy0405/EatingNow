@@ -6,6 +6,7 @@ class ProductRecommended {
   List<DataProduct>? data;
   int? dataCount;
 
+
   ProductRecommended(
       {this.success,
         this.message,
@@ -27,6 +28,7 @@ class ProductRecommended {
     }
     dataCount = json['DataCount'];
   }
+
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
@@ -50,7 +52,7 @@ class DataProduct {
   int? price;
   int? qty;
   String? uploadImage;
-  Null? description;
+  String? description;
   int? userId;
   bool? status;
 

@@ -11,6 +11,7 @@ import '../../models/LocationData.dart';
 import '../../storage/cartstorage.dart';
 import '../../storage/locationstorage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import '../OderFood/orderfood.dart';
 import '../circularprogress/DottedCircularProgressIndicator.dart';
 
 
@@ -38,7 +39,7 @@ class _CartPageState extends State<CartPage> {
   // Hàm tăng số lượng sản phẩm
   void _increaseQuantity(CartItem item) {
     setState(() {
-      item.quantity += 1 ;
+      item.qty += 1 ;
     });
     CartStorage.UpdateToCart(item);
     _loadCartItems();
@@ -91,7 +92,7 @@ class _CartPageState extends State<CartPage> {
           itemCount: cartItems.length,
           itemBuilder: (context, index) {
             return Dismissible(
-              key: Key(cartItems[index].id.toString()), // Key là một giá trị duy nhất cho mỗi món ăn
+              key: Key(cartItems[index].foodListId.toString()), // Key là một giá trị duy nhất cho mỗi món ăn
               background: Container(
                 color: Colors.red, // Màu nền khi vuốt để xóa
                 child: Align(
@@ -112,36 +113,43 @@ class _CartPageState extends State<CartPage> {
                   cartItems.removeAt(index);
                 });
               },
-              child: Card(
-                elevation: 2, // Độ nâng của thẻ
-                margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8), // Khoảng cách giữa các thẻ
-                child: Padding(
-                  padding: EdgeInsets.all(8),
-                  child: ListTile(
-                    leading: Image.network(
-                      cartItems[index].image ?? " ",
-                      fit: BoxFit.fill,
-                      width: 40,
-                    ),
-                    title: Text(cartItems[index].name),
-                    subtitle: Row(
-                      children: [
-                        SmallText(text: 'Số lượng: '+cartItems[index].quantity.toString(),color: Colors.black54,),
-                    InkWell(
-                      onTap: () {
-                        _decreaseQuantity(cartItems[index]);
-                      },
-                      child: Padding(
-                        padding: EdgeInsets.all(6), // Điều chỉnh giá trị này để thay đổi kích thước của nút
-                        child: Icon(
-                          Icons.edit,
-                          size: 20,
-                          color: AppColors.mainColor,
-                        ),
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.pushReplacement(
+                      context,
+                      Navigator.pushNamed(context, "/order", arguments: {'data': cartItems }) as Route<Object?>
+                  );
+                },
+                child:Card(
+                  elevation: 2, // Độ nâng của thẻ
+                  margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8), // Khoảng cách giữa các thẻ
+                  child: Padding(
+                    padding: EdgeInsets.all(8),
+                    child: ListTile(
+                      leading: Image.network(
+                        cartItems[index].uploadImage ?? " ",
+                        fit: BoxFit.fill,
+                        width: 40,
                       ),
-                    ),
-                      ],
-                    ),
+                      title: Text(cartItems[index].foodName),
+                      subtitle: Row(
+                        children: [
+                          SmallText(text: 'Số lượng: '+cartItems[index].qty.toString(),color: Colors.black54,),
+                          InkWell(
+                            onTap: () {
+                              _decreaseQuantity(cartItems[index]);
+                            },
+                            child: Padding(
+                              padding: EdgeInsets.all(6), // Điều chỉnh giá trị này để thay đổi kích thước của nút
+                              child: Icon(
+                                Icons.edit,
+                                size: 20,
+                                color: AppColors.mainColor,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
 
 /*
                     subtitle: Row(
@@ -184,22 +192,23 @@ class _CartPageState extends State<CartPage> {
                         ),
                       ],
                     ),*/
-                    trailing: Text(
-                      NumberFormat.currency(locale: 'vi_VN', symbol: '₫')
-                          .format(cartItems[index].price * cartItems[index].quantity  ?? 0),
-                      style: TextStyle(
-                        color: Colors.redAccent,
-                        fontSize: Dimensions.font13,
+                      trailing: Text(
+                        NumberFormat.currency(locale: 'vi_VN', symbol: '₫')
+                            .format(cartItems[index].price * cartItems[index].qty  ?? 0),
+                        style: TextStyle(
+                          color: Colors.redAccent,
+                          fontSize: Dimensions.font13,
+                        ),
                       ),
                     ),
                   ),
                 ),
               ),
+
             );
           },
         ),
       ),
-
     );
   }
 }

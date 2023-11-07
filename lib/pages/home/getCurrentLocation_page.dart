@@ -6,6 +6,7 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../../data/Api/GoogleAPIService.dart';
 import '../../models/LocationData.dart';
+import '../../storage/cartstorage.dart';
 import '../../storage/locationstorage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import '../circularprogress/DottedCircularProgressIndicator.dart';
@@ -13,11 +14,16 @@ import 'main_food_page.dart';
 
 
 class LocationPage extends StatefulWidget {
+  final String? link;
+  LocationPage({required this.link});
   @override
-  _LocationPageState createState() => _LocationPageState();
+  _LocationPageState createState() => _LocationPageState(link: link);
 }
 
 class _LocationPageState extends State<LocationPage> {
+  final String? link;
+  _LocationPageState({required this.link});
+
   String? _locationMessage;
   final googleApiService = GoogleAPIService(
       'AIzaSyAG61NrUZkmMW8AS9F7B8mCdT9KQhgG95s');
@@ -25,7 +31,16 @@ class _LocationPageState extends State<LocationPage> {
   late bool isloadingdata = true;
   late String places = "";
   late Position position;
+  List<CartItem> cartItems = [];
 
+
+  // Phương thức để load danh sách món ăn từ SharedPreferences
+  void _loadCartItems() async {
+    List<CartItem> loadedItems = await CartStorage.getCartItems();
+    setState(() {
+      cartItems = loadedItems;
+    });
+  }
   @override
   initState() {
     super.initState();
@@ -34,6 +49,7 @@ class _LocationPageState extends State<LocationPage> {
     // Tự động lấy vị trí đã sử dụng gần nhất
     getCurrentLocation();
     locationStorage = LocationStorage();
+    _loadCartItems();
   }
 
   // Danh sách các địa điểm đã lưu
@@ -79,11 +95,20 @@ class _LocationPageState extends State<LocationPage> {
   Future<void> getAddressdeliveryOnTap(LocationData locationData) async {
     await locationStorage.saveLocation(
         locationData.name, locationData.latitude, locationData.longitude, locationData.address);
-    // Chuyển sang trang MainPage
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => MainFoodPage()),
-    );
+
+    if (link != "") {
+      // Chuyển đổi route tới link và truyền dữ liệu caritems
+      Navigator.pushReplacement(
+        context,
+          Navigator.pushNamed(context, link!, arguments: {'data': cartItems }) as Route<Object?>
+      );
+    } else {
+      // Otherwise, go to the MainFoodPage
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => MainFoodPage()),
+      );
+    }
   }
 
   // Lưu vị trí khách hàng chọn giao hàng và chuyển san màn hình Home Page

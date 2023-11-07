@@ -21,7 +21,7 @@ class AppColumn extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
-          height: 52,
+          height: Dimensions.height40,
           child:
             BigText(text: text, size:  Dimensions.font20,),
             ),
@@ -35,11 +35,11 @@ class AppColumn extends StatelessWidget {
                 starColor: AppColors.yellowColor,
                 emptyStarColor: Colors.grey,
               ),
-            SizedBox(width: 10),
+            SizedBox(width: 8),
             SmallText(text: rating.toString()),
-            SizedBox(width: 10),
+            SizedBox(width: 8),
             SmallText(text: "1287"),
-            SizedBox(width: 10),
+            SizedBox(width: 8),
             SmallText(text: "comment"),
           ],
         ),
