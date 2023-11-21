@@ -4,15 +4,21 @@ import 'package:fam/pages/OderFood/orderfood.dart';
 import 'package:fam/pages/food/popular_food_detail.dart';
 import 'package:fam/pages/food/recommened_food_detail.dart';
 import 'package:fam/pages/home/getCurrentLocation_page.dart';
+import 'package:fam/pages/home/Login.dart';
+
 import 'package:fam/pages/home/main_food_page.dart';
 import 'package:fam/storage/cartstorage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
 Future<void> main() async {
-  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );  FlutterNativeSplash.preserve(widgetsBinding: WidgetsFlutterBinding.ensureInitialized());
   runApp(MyApp());
 }
 
@@ -50,9 +56,10 @@ class _MyAppState extends State<MyApp> {
         useMaterial3: true,
       ),
       debugShowCheckedModeBanner: false,
-      initialRoute: '/getlocation', // Mặc định
+      initialRoute: '/login', // Mặc định
       routes: {
         '/': (context) => MainFoodPage(), // trang chính
+        '/login': (context) => LoginPage(), // Lấy vị trí
         '/getlocation': (context) => LocationPage(link: ""), // Lấy vị trí
         '/order': (context) => OrderPage(),// Đặt hàng
         '/cartdetails': (context) => CartPage(),// Chi tiết giỏ hàng

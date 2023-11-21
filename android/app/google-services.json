@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "334588390943",
+    "firebase_url": "https://eating-now-default-rtdb.firebaseio.com",
+    "project_id": "eating-now",
+    "storage_bucket": "eating-now.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:334588390943:android:c6f1eab6703294a8f6ef2a",
+        "android_client_info": {
+          "package_name": "com.example.fam"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "334588390943-hh0roccqrot34d001eb2327ne1d4ch1e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC_mdM-RLljEn-8Y0N7YIIes_1gUXus5DU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "334588390943-aropkit80spakrnnv5ps3rlp0ggibsbu.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "334588390943-m005kolqnlbqbjg2jurd6vu9lm8orka2.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.fam"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
